@@ -1,30 +1,19 @@
 package br.com.alura.leilao.login;
 
 import org.junit.jupiter.api.*;
-import org.openqa.selenium.By;
-import org.openqa.selenium.NoSuchElementException;
-import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.chrome.ChromeDriver;
 
 public class LoginTest {
 
-    private static final String URL_LOGIN = "http://localhost:8080/login";
-    private WebDriver browser;
-
-    @BeforeAll
-    public static void beforeAll() {
-        System.setProperty("webdriver.chrome.driver", "drivers/chromedriver.exe");
-    }
+    private LoginPage loginPage;
 
     @BeforeEach
     public void beforeEach() {
-        this.browser = new ChromeDriver();
-        browser.navigate().to(URL_LOGIN);
+        this.loginPage = new LoginPage();
     }
 
     @AfterEach
     public void afterEach() {
-        this.browser.quit();
+        this.loginPage.dispose();
     }
 
     @Test
@@ -32,39 +21,34 @@ public class LoginTest {
         String username = "fulano";
         String password = "pass";
 
-        browser.findElement(By.id("username")).sendKeys(username);
-        browser.findElement(By.id("password")).sendKeys(password);
-        browser.findElement(By.id("login-form")).submit();
+        loginPage.fillLoginForm(username, password);
+        loginPage.logIn();
 
-        Assertions.assertNotEquals(browser.getCurrentUrl(), URL_LOGIN);
-        Assertions.assertEquals(username, browser.findElement(By.id("usuario-logado")).getText());
+        Assertions.assertNotEquals(loginPage.getCurrentUrl(), loginPage.getUrlLogin());
+        Assertions.assertEquals(username, loginPage.getUsernameLoggedIn());
     }
 
     @Test
     public void shouldNotLoginSuccessfully() {
-        String targetUrl = "http://localhost:8080/login?error";
         String expectedErrorMessage = "Usuário e senha inválidos.";
         String username = "invalido";
         String password = "123123";
 
-        browser.findElement(By.id("username")).sendKeys(username);
-        browser.findElement(By.id("password")).sendKeys(password);
-        browser.findElement(By.id("login-form")).submit();
+        loginPage.fillLoginForm(username, password);
+        loginPage.logIn();
 
-        Assertions.assertEquals(browser.getCurrentUrl(), targetUrl);
-        Assertions.assertTrue(browser.getPageSource().contains(expectedErrorMessage));
-        Assertions.assertThrows(NoSuchElementException.class, () -> browser.findElement(By.id("usuario-logado")));
+        Assertions.assertEquals(loginPage.getCurrentUrl(), loginPage.getErrorPageUrl());
+        Assertions.assertTrue(loginPage.contains(expectedErrorMessage));
+        Assertions.assertNull(loginPage.getUsernameLoggedIn());
     }
 
     @Test
     public void shouldNotAccessTheRestrictedPageWithoutBeingLoggedIn() {
-        String initialUrl = "http://localhost:8080/leiloes/2";
-        String targetUrl = "http://localhost:8080/login";
         String unexpectedMessage = "Dados do Leilão";
 
-        browser.navigate().to(initialUrl);
+        loginPage.navigateToAuctionPage();
 
-        Assertions.assertEquals(browser.getCurrentUrl(), targetUrl);
-        Assertions.assertFalse(browser.getPageSource().contains(unexpectedMessage));
+        Assertions.assertEquals(loginPage.getCurrentUrl(), loginPage.getUrlLogin());
+        Assertions.assertFalse(loginPage.contains(unexpectedMessage));
     }
 }
