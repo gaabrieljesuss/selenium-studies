@@ -1,21 +1,15 @@
 package br.com.alura.leilao.leiloes;
 
+import br.com.alura.leilao.PageObject;
 import org.openqa.selenium.By;
-import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
-import org.openqa.selenium.chrome.ChromeDriver;
 
-public class AuctionsPage {
-    private final String URL_REGISTER_AUCTIONS = "http://localhost:8080/leiloes";
-    private WebDriver browser;
+public class AuctionsPage extends PageObject {
+    private final String URL_AUCTIONS = "http://localhost:8080/leiloes";
 
     public AuctionsPage(WebDriver browser) {
-        this.browser = browser;
-    }
-
-    public void dispose() {
-        this.browser.quit();
+        super(browser);
     }
 
     public AuctionRegistrationPage loadForm() {
@@ -32,5 +26,13 @@ public class AuctionsPage {
         return columnName.getText().equals(auctionName)
                 && columnOpeningDate.getText().equals(openingDate)
                 && columnValue.getText().equals(initialValue);
+    }
+
+    public boolean isAuctionsPage() {
+        return browser.getCurrentUrl().equals(URL_AUCTIONS);
+    }
+
+    public boolean containsMessage(String message) {
+        return browser.getPageSource().contains(message);
     }
 }
