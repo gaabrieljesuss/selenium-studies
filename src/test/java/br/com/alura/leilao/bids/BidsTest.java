@@ -57,4 +57,32 @@ public class BidsTest {
         Assertions.assertTrue(this.bidsPage.contains(expectedMessage));
         Assertions.assertTrue(this.bidsPage.BidIsRegistered(dateExpected, userExpected, valueExpected));
     }
+
+    @Test
+    public void registrationMustFailBecauseTheSameUserMadeTheLastBid() {
+        String expectedErrorMessage = "Lance invalido!";
+        String firstBidValue = "600.00";
+        String secondBidValue = "700.00";
+
+        this.bidsPage = this.auctionsPage.loadBids();
+        this.bidsPage.registerBid(firstBidValue);
+
+        this.bidsPage.registerBid(secondBidValue);
+
+        Assertions.assertTrue(this.bidsPage.contains(expectedErrorMessage));
+    }
+
+    @Test
+    public void registrationMustFailBecauseTheBidValueIsLessThanTheLastBidValue() {
+        String expectedErrorMessage = "Lance invalido!";
+        String firstBidValue = "600.00";
+        String secondBidValue = "550.00";
+
+        this.bidsPage = this.auctionsPage.loadBids();
+        this.bidsPage.registerBid(firstBidValue);
+
+        this.bidsPage.registerBid(secondBidValue);
+
+        Assertions.assertTrue(this.bidsPage.contains(expectedErrorMessage));
+    }
 }
