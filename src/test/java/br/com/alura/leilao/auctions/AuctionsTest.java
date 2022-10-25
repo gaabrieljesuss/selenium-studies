@@ -1,4 +1,4 @@
-package br.com.alura.leilao.leiloes;
+package br.com.alura.leilao.auctions;
 
 import br.com.alura.leilao.login.LoginPage;
 import org.junit.jupiter.api.*;

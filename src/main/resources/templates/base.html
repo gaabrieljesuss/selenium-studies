@@ -38,8 +38,8 @@
 			<a th:href="@{/leiloes}"><span class="logo ml-2">leilão</span></a>
 			<span class="mt-3 mr-2">
 				<span id="usuario-logado" sec:authorize="isAuthenticated()" sec:authentication="name" class="font-italic"></span>
-				<a class="text-light" sec:authorize="!isAuthenticated()" href="/login">Entrar</a>
-				<a onclick="document.querySelector('#form-login').submit()" class="text-light ml-3" sec:authorize="isAuthenticated()" href="#">Sair</a>
+				<a id="log-in" class="text-light" sec:authorize="!isAuthenticated()" href="/login">Entrar</a>
+				<a id="logout" onclick="document.querySelector('#form-login').submit()" class="text-light ml-3" sec:authorize="isAuthenticated()" href="#">Sair</a>
 				<form id="form-login" th:action="@{/logout}" method="post"></form>
 			</span>
 		</div>

@@ -1,9 +1,10 @@
 package br.com.alura.leilao.login;
 
 import br.com.alura.leilao.PageObject;
-import br.com.alura.leilao.leiloes.AuctionsPage;
+import br.com.alura.leilao.auctions.AuctionsPage;
 import org.openqa.selenium.By;
 import org.openqa.selenium.NoSuchElementException;
+import org.openqa.selenium.WebDriver;
 
 public class LoginPage extends PageObject {
     private final String URL_LOGIN = "http://localhost:8080/login";
@@ -11,6 +12,10 @@ public class LoginPage extends PageObject {
     public LoginPage() {
         super(null);
         this.browser.navigate().to(URL_LOGIN);
+    }
+
+    public LoginPage(WebDriver browser) {
+        super(browser);
     }
 
     public void fillLoginForm(String username, String password) {

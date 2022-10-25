@@ -1,4 +1,4 @@
-package br.com.alura.leilao.leiloes;
+package br.com.alura.leilao.auctions;
 
 import br.com.alura.leilao.PageObject;
 import org.openqa.selenium.By;

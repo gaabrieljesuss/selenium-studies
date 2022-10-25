@@ -1,6 +1,8 @@
-package br.com.alura.leilao.leiloes;
+package br.com.alura.leilao.auctions;
 
 import br.com.alura.leilao.PageObject;
+import br.com.alura.leilao.bids.BidsPage;
+import br.com.alura.leilao.login.LoginPage;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
@@ -34,5 +36,21 @@ public class AuctionsPage extends PageObject {
 
     public boolean containsMessage(String message) {
         return browser.getPageSource().contains(message);
+    }
+
+    public void logout() {
+        this.browser.findElement(By.id("logout")).click();
+    }
+
+    public LoginPage logIn() {
+        this.browser.findElement(By.id("log-in")).click();
+        return new LoginPage(this.browser);
+    }
+
+    public BidsPage loadBids() {
+        WebElement tableRow = this.browser.findElement(By.cssSelector("#tabela-leiloes tbody tr:last-child"));
+        tableRow.findElement(By.cssSelector("td:nth-child(5)")).click();
+
+        return new BidsPage(browser);
     }
 }
