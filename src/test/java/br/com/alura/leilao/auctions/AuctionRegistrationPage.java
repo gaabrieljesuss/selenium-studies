@@ -20,6 +20,12 @@ public class AuctionRegistrationPage extends PageObject {
         return new AuctionsPage(browser);
     }
 
+    public void cleanAuctionRegisterFields() {
+        browser.findElement(By.id("nome")).clear();
+        browser.findElement(By.id("valorInicial")).clear();
+        browser.findElement(By.id("dataAbertura")).clear();
+    }
+
     public boolean isAuctionsRegistrationPage() {
         return browser.getCurrentUrl().equals(URL_REGISTER_AUCTIONS);
     }

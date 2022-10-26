@@ -19,6 +19,12 @@ public class AuctionsPage extends PageObject {
         return new AuctionRegistrationPage(browser);
     }
 
+    public AuctionRegistrationPage loadEditForm() {
+        WebElement tableRow = this.browser.findElement(By.cssSelector("#tabela-leiloes tbody tr:last-child"));
+        tableRow.findElement(By.cssSelector("td:nth-child(5)")).click();
+        return new AuctionRegistrationPage(browser);
+    }
+
     public boolean auctionIsRegistered(String auctionName, String initialValue, String openingDate) {
         WebElement tableRow = this.browser.findElement(By.cssSelector("#tabela-leiloes tbody tr:last-child"));
         WebElement columnName = tableRow.findElement(By.cssSelector("td:nth-child(1)"));

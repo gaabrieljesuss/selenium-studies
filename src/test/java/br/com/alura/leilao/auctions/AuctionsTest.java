@@ -30,9 +30,12 @@ public class AuctionsTest {
         String openingDate = LocalDate.now().format(DateTimeFormatter.ofPattern("dd/MM/yyyy"));
         String auctionName = "Leilao do dia " + openingDate;
         String initialValue = "500.00";
+        String expectedSuccessMessage = "Leilão salvo com sucesso";
 
         this.auctionsPage = auctionRegistrationPage.registerAuction(auctionName, initialValue, openingDate);
+        Assertions.assertTrue(auctionsPage.isAuctionsPage());
         Assertions.assertTrue(auctionsPage.auctionIsRegistered(auctionName, initialValue, openingDate));
+        Assertions.assertTrue(auctionsPage.containsMessage(expectedSuccessMessage));
     }
 
     @Test
@@ -82,6 +85,111 @@ public class AuctionsTest {
         String expectedErrorMessage = "deve ser uma data no formato dd/MM/yyyy";
 
         this.auctionsPage = auctionRegistrationPage.registerAuction(auctionName, initialValue, openingDate);
+        Assertions.assertFalse(auctionRegistrationPage.isAuctionsRegistrationPage());
+        Assertions.assertTrue(auctionsPage.isAuctionsPage());
+        Assertions.assertTrue(auctionsPage.containsMessage(expectedErrorMessage));
+    }
+
+    @Test
+    public void shouldEditAuction() {
+        String openingDate = "25/10/2022";
+        String auctionName = "Leilao do dia " + openingDate;
+        String initialValue = "500.00";
+
+        this.auctionsPage = auctionRegistrationPage.registerAuction(auctionName, initialValue, openingDate);
+        this.auctionRegistrationPage = auctionsPage.loadEditForm();
+
+        String newOpeningDate = LocalDate.now().format(DateTimeFormatter.ofPattern("dd/MM/yyyy"));
+        String newAuctionName = "Leilao do dia " + newOpeningDate;
+        String newInitialValue = "400.00";
+        String expectedSuccessMessage = "Leilão salvo com sucesso";
+
+        this.auctionRegistrationPage.cleanAuctionRegisterFields();
+        this.auctionsPage = auctionRegistrationPage.registerAuction(newAuctionName, newInitialValue, newOpeningDate);
+        Assertions.assertTrue(auctionsPage.auctionIsRegistered(newAuctionName, newInitialValue, newOpeningDate));
+        Assertions.assertTrue(auctionsPage.containsMessage(expectedSuccessMessage));
+        Assertions.assertTrue(auctionsPage.isAuctionsPage());
+    }
+
+    @Test
+    public void editionMustFailBecauseAuctionNameIsEmpty() {
+        String openingDate = "25/10/2022";
+        String auctionName = "Leilao do dia " + openingDate;
+        String initialValue = "500.00";
+
+        this.auctionsPage = auctionRegistrationPage.registerAuction(auctionName, initialValue, openingDate);
+        this.auctionRegistrationPage = auctionsPage.loadEditForm();
+
+        String newOpeningDate = LocalDate.now().format(DateTimeFormatter.ofPattern("dd/MM/yyyy"));
+        String newAuctionName = "";
+        String newInitialValue = "400.00";
+        String expectedErrorMessage = "não deve estar em branco";
+
+        this.auctionRegistrationPage.cleanAuctionRegisterFields();
+        this.auctionsPage = auctionRegistrationPage.registerAuction(newAuctionName, newInitialValue, newOpeningDate);
+        Assertions.assertFalse(auctionRegistrationPage.isAuctionsRegistrationPage());
+        Assertions.assertTrue(auctionsPage.isAuctionsPage());
+        Assertions.assertTrue(auctionsPage.containsMessage(expectedErrorMessage));
+    }
+
+    @Test
+    public void editionMustFailBecauseAuctionNameIsLessThanThreeCharacters() {
+        String openingDate = "25/10/2022";
+        String auctionName = "Leilao do dia " + openingDate;
+        String initialValue = "500.00";
+
+        this.auctionsPage = auctionRegistrationPage.registerAuction(auctionName, initialValue, openingDate);
+        this.auctionRegistrationPage = auctionsPage.loadEditForm();
+
+        String newOpeningDate = LocalDate.now().format(DateTimeFormatter.ofPattern("dd/MM/yyyy"));
+        String newAuctionName = "AB";
+        String newInitialValue = "400.00";
+        String expectedErrorMessage = "minimo 3 caracteres";
+
+        this.auctionRegistrationPage.cleanAuctionRegisterFields();
+        this.auctionsPage = auctionRegistrationPage.registerAuction(newAuctionName, newInitialValue, newOpeningDate);
+        Assertions.assertFalse(auctionRegistrationPage.isAuctionsRegistrationPage());
+        Assertions.assertTrue(auctionsPage.isAuctionsPage());
+        Assertions.assertTrue(auctionsPage.containsMessage(expectedErrorMessage));
+    }
+
+    @Test
+    public void editionMustFailBecauseInitialValueIsEmpty() {
+        String openingDate = "25/10/2022";
+        String auctionName = "Leilao do dia " + openingDate;
+        String initialValue = "500.00";
+
+        this.auctionsPage = auctionRegistrationPage.registerAuction(auctionName, initialValue, openingDate);
+        this.auctionRegistrationPage = auctionsPage.loadEditForm();
+
+        String newOpeningDate = LocalDate.now().format(DateTimeFormatter.ofPattern("dd/MM/yyyy"));
+        String newAuctionName = "Leilao do dia " + openingDate;
+        String newInitialValue = "";
+        String expectedErrorMessage = "deve ser um valor maior de 0.1";
+
+        this.auctionRegistrationPage.cleanAuctionRegisterFields();
+        this.auctionsPage = auctionRegistrationPage.registerAuction(newAuctionName, newInitialValue, newOpeningDate);
+        Assertions.assertFalse(auctionRegistrationPage.isAuctionsRegistrationPage());
+        Assertions.assertTrue(auctionsPage.isAuctionsPage());
+        Assertions.assertTrue(auctionsPage.containsMessage(expectedErrorMessage));
+    }
+
+    @Test
+    public void editionMustFailBecauseOpeningDateIsEmpty() {
+        String openingDate = "25/10/2022";
+        String auctionName = "Leilao do dia " + openingDate;
+        String initialValue = "500.00";
+
+        this.auctionsPage = auctionRegistrationPage.registerAuction(auctionName, initialValue, openingDate);
+        this.auctionRegistrationPage = auctionsPage.loadEditForm();
+
+        String newOpeningDate = "";
+        String newAuctionName = "Leilao do dia " + openingDate;
+        String newInitialValue = "400.00";
+        String expectedErrorMessage = "deve ser uma data no formato dd/MM/yyyy";
+
+        this.auctionRegistrationPage.cleanAuctionRegisterFields();
+        this.auctionsPage = auctionRegistrationPage.registerAuction(newAuctionName, newInitialValue, newOpeningDate);
         Assertions.assertFalse(auctionRegistrationPage.isAuctionsRegistrationPage());
         Assertions.assertTrue(auctionsPage.isAuctionsPage());
         Assertions.assertTrue(auctionsPage.containsMessage(expectedErrorMessage));
